@@ -9,7 +9,10 @@ class Student extends Person {
   }
 
   tinhDiemTB = () => {
-    const average = Number((this.diemToan + this.diemHoa + this.diemLy) / 3);
+    const diemToan = Number(this.diemToan);
+    const diemHoa = Number(this.diemHoa);
+    const diemLy = Number(this.diemLy);
+    const average = (diemToan + diemHoa + diemLy) / 3;
     return average;
   };
 }
