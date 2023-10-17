@@ -9,6 +9,7 @@ const getElement = (selector) => {
 
 const BASE_URL = "https://652d2601f9afa8ef4b26de3d.mockapi.io/users";
 
+//lấy danh sách người dùng từ API
 const getUserList = () => {
   const promise = axios({
     method: "GET",
@@ -30,6 +31,7 @@ const getUserList = () => {
 
 getUserList();
 
+//render danh sách ra table
 const renderTable = (userList) => {
   let htmlContent = "";
   userList.forEach((user) => {
@@ -51,6 +53,7 @@ const renderTable = (userList) => {
   getElement("#tbodyUser").innerHTML = htmlContent;
 };
 
+//ẩn hoặc hiện input tương ứng với loại người dùng
 const showInput = () => {
   const type = getElement("#loai").value;
   if (type === "Học viên") {
@@ -96,6 +99,7 @@ getElement("#loai").onchange = () => {
   showInput();
 };
 
+//lấy thông tin người dùng từ modal
 const layThongTinNguoiDung = () => {
   const elements = document.querySelectorAll(
     "#userForm input, #userForm select, #userForm textarea"
@@ -161,6 +165,7 @@ getElement("#btnThem").onclick = () => {
   showInput();
 };
 
+//reset lại form khi bấm nút close
 getElement("#btnClose").onclick = () => {
   resetForm();
   getElement("#txtLuongThang").hidden = true;
@@ -176,6 +181,7 @@ const resetForm = () => {
   });
 };
 
+//thêm người dùng vào API
 getElement("#btnAdd").onclick = () => {
   const user = layThongTinNguoiDung();
 
@@ -200,6 +206,7 @@ getElement("#btnAdd").onclick = () => {
     });
 };
 
+//lấy thông tin người dùng dựa vào id từ API và render lên form trong modal
 window.editUser = (id) => {
   getElement("#btnAdd").hidden = true;
   getElement("#btnCapNhat").hidden = false;
@@ -284,6 +291,7 @@ window.editUser = (id) => {
     });
 };
 
+//lấy thông tin người dùng trả lại cho API sau khi người dùng cập nhật
 getElement("#btnCapNhat").onclick = () => {
   const user = layThongTinNguoiDung();
 
@@ -309,6 +317,7 @@ getElement("#btnCapNhat").onclick = () => {
     });
 };
 
+//xóa người dùng
 window.deleteUser = (id) => {
   const promise = axios({
     method: "DELETE",
@@ -324,6 +333,7 @@ window.deleteUser = (id) => {
     });
 };
 
+//Hiện lên thông tin cụ thể của người dùng khi bấm button Detail
 window.showDetail = (id) => {
   getElement("#btnAdd").hidden = true;
   getElement("#btnCapNhat").hidden = true;
