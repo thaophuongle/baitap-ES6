@@ -150,7 +150,7 @@ const layThongTinNguoiDung = () => {
     );
 };
 
-getElement("#btnThem").onclick = () => {
+getElement("#btnAdd").onclick = () => {
   const user = layThongTinNguoiDung();
   getElement("#btnCapNhat").hidden = true;
 
