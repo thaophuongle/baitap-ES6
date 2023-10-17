@@ -157,6 +157,7 @@ const layThongTinNguoiDung = () => {
 getElement("#btnThem").onclick = () => {
   getElement("#btnCapNhat").hidden = true;
   getElement("#btnAdd").hidden = false;
+  getElement("#txtId").hidden = true;
 };
 
 getElement("#btnClose").onclick = () => {
@@ -199,6 +200,8 @@ getElement("#btnAdd").onclick = () => {
 window.editUser = (id) => {
   getElement("#btnAdd").hidden = true;
   getElement("#btnCapNhat").hidden = false;
+  getElement("#txtId").hidden = false;
+
   const promise = axios({
     method: "GET",
     url: `${BASE_URL}/${id}`,

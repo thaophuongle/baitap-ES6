@@ -199,7 +199,7 @@
           </div>
           <div class="modal-body">
             <form class="needs-validation" id="userForm">
-              <div class="mb-3" hidden="true">
+              <div id="txtId" class="mb-3" hidden="true">
                 <label for="id">Mã người dùng</label>
                 <input
                   type="text"
@@ -209,6 +209,7 @@
                   value=""
                   required
                   name="id"
+                  readonly
                 />
                 <div id="invalidID" class="invalid-feedback"></div>
               </div>
