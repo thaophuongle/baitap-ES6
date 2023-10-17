@@ -41,7 +41,7 @@ const renderTable = (userList) => {
           <td>${user.diaChi}</td>
           <td>${user.email}</td>
           <td>
-            <button class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" onclick="editFood(${user.id})" id="btnEdit">Edit</button>
+            <button class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" onclick="editUser(${user.id})" id="btnEdit">Edit</button>
             <button class="btn btn-danger" onclick="deleteFood(${user.id})">Delete</button>
             <button class="btn btn-info">Detail</button>
           </td>
@@ -122,11 +122,9 @@ const layThongTinNguoiDung = () => {
     danhGia,
   } = user;
 
-  const object = getElement("#loai");
-  const objectType = object.value;
-  //return console.log(objectType);
+  const objectType = document.getElementById("loai");
 
-  if (objectType === "loai1")
+  if (objectType.value === "loai1")
     return new Student(
       id,
       name,
@@ -137,10 +135,10 @@ const layThongTinNguoiDung = () => {
       diemLy,
       diemHoa
     );
-  else if (objectType === "loai2")
-    return new Student(id, name, type, diaChi, email, soNgay, luongTheoNgay);
-  else if (objectType === "loai3")
-    return new Student(
+  else if (objectType.value === "loai2")
+    return new Employee(id, name, type, diaChi, email, soNgay, luongTheoNgay);
+  else if (objectType.value === "loai3")
+    return new Customer(
       id,
       name,
       type,
@@ -153,7 +151,6 @@ const layThongTinNguoiDung = () => {
 };
 
 getElement("#btnThem").onclick = () => {
-  layThongTinNguoiDung();
   const user = layThongTinNguoiDung();
   getElement("#btnCapNhat").hidden = true;
 
@@ -163,15 +160,14 @@ getElement("#btnThem").onclick = () => {
     data: {
       //spread operator
       ...user,
-      //type: user.mapLoaiDoiTuong(),
+      type: user.mapLoaiDoiTuong(),
     },
   });
 
   promise
     .then((res) => {
+      console.log(res.data);
       getUserList();
-
-      //đóng modal sau khi thêm món ăn
       getElement("#btnClose").click();
     })
     .catch((err) => {
