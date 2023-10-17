@@ -216,17 +216,17 @@ window.editUser = (id) => {
       const user = parse(res.data);
       getElement("#id").value = user.id;
       getElement("#name").value = user.name;
-      getElement("#loai").value = user.loai;
+      getElement("#loai").value = user.type;
       getElement("#diaChi").value = user.diaChi;
       getElement("#email").value = user.email;
-      if (user.loai === "Học viên") {
+      if (user.type === "Học viên") {
         getElement("#diemToan").value = user.diemToan;
         getElement("#diemLy").value = user.diemLy;
         getElement("#diemHoa").value = user.diemHoa;
-      } else if (user.loai === "Giảng viên") {
+      } else if (user.type === "Giảng viên") {
         getElement("#soNgay").value = user.soNgay;
         getElement("#luongTheoNgay").value = user.luongTheoNgay;
-      } else if (user.loai === "Khách hàng") {
+      } else if (user.type === "Khách hàng") {
         getElement("#tenCTy").value = user.tenCTy;
         getElement("#triGiaHD").value = user.triGiaHD;
         getElement("#danhGia").value = user.danhGia;
