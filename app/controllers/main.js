@@ -411,3 +411,30 @@ window.showDetail = (id) => {
       console.log(err);
     });
 };
+
+//Lọc người dùng theo loại
+getElement("#selLoai").onchange = () => {
+  const promise = axios({
+    method: "GET",
+    url: BASE_URL,
+  });
+
+  promise
+    .then((res) => {
+      const type = getElement("#selLoai").value;
+      if (
+        type === "Học viên" ||
+        type === "Giảng viên" ||
+        type === "Khách hàng"
+      ) {
+        const users = res.data.filter((user) => user.type === type);
+        renderTable(users);
+      } else {
+        renderTable(res.data);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+    .finally(() => {});
+};
