@@ -187,7 +187,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Thêm Món Ăn</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Thêm Người Dùng</h5>
             <button
               type="button"
               class="close"
@@ -233,7 +233,7 @@
                   required
                   name="type"
                 >
-                  <option value="">Chọn loại</option>
+                  <option selected value="">Chọn loại</option>
                   <option value="Học viên">Học viên</option>
                   <option value="Giảng viên">Giảng viên</option>
                   <option value="Khách hàng">Khách hàng</option>
@@ -368,6 +368,24 @@
                   name="danhGia"
                 ></textarea>
                 <div id="invalidDanhGia" class="invalid-form"></div>
+              </div>
+              <div id="txtDiemTB" class="mb-3" hidden="true">
+                <label for="diemTB">Điểm trung bình</label>
+                <input
+                  class="form-control"
+                  id="diemTB"
+                  placeholder="Nhập điểm trung bình"
+                  readonly
+                ></input>
+              </div>
+              <div id="txtLuongThang" class="mb-3" hidden="true">
+                <label for="luongThang">Lương tháng</label>
+                <input
+                  class="form-control"
+                  id="luongThang"
+                  placeholder="Nhập lương tháng"
+                  readonly
+                ></input>
               </div>
             </form>
           </div>

@@ -43,7 +43,7 @@ const renderTable = (userList) => {
           <td>
             <button class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" onclick="editUser(${user.id})" id="btnEdit">Edit</button>
             <button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button>
-            <button class="btn btn-info">Detail</button>
+            <button data-toggle="modal" data-target="#exampleModal" onclick="showDetail(${user.id})" class="btn btn-info">Detail</button>
           </td>
       </tr>
       `;
@@ -80,7 +80,7 @@ const showInput = () => {
     getElement("#txtDiemLy").hidden = true;
     getElement("#txtSoNgay").hidden = true;
     getElement("#txtLuongTheoNgay").hidden = true;
-  } else {
+  } else if (type === "") {
     getElement("#txtSoNgay").hidden = true;
     getElement("#txtLuongTheoNgay").hidden = true;
     getElement("#txtDiemToan").hidden = true;
@@ -158,10 +158,13 @@ getElement("#btnThem").onclick = () => {
   getElement("#btnCapNhat").hidden = true;
   getElement("#btnAdd").hidden = false;
   getElement("#txtId").hidden = true;
+  showInput();
 };
 
 getElement("#btnClose").onclick = () => {
   resetForm();
+  getElement("#txtLuongThang").hidden = true;
+  getElement("#txtDiemTB").hidden = true;
 };
 
 const resetForm = () => {
@@ -217,22 +220,61 @@ window.editUser = (id) => {
 
       console.log(res.data);
       const user = parse(res.data);
-      getElement("#id").value = user.id;
-      getElement("#name").value = user.name;
-      getElement("#loai").value = user.type;
-      getElement("#diaChi").value = user.diaChi;
-      getElement("#email").value = user.email;
       if (user.type === "Học viên") {
-        getElement("#diemToan").value = user.diemToan;
-        getElement("#diemLy").value = user.diemLy;
-        getElement("#diemHoa").value = user.diemHoa;
+        const student = new Student(
+          user.id,
+          user.name,
+          user.type,
+          user.diaChi,
+          user.email,
+          user.diemToan,
+          user.diemLy,
+          user.diemHoa
+        );
+        getElement("#id").value = student.id;
+        getElement("#name").value = student.name;
+        getElement("#loai").value = student.type;
+        getElement("#diaChi").value = student.diaChi;
+        getElement("#email").value = student.email;
+        getElement("#diemToan").value = student.diemToan;
+        getElement("#diemLy").value = student.diemLy;
+        getElement("#diemHoa").value = student.diemHoa;
       } else if (user.type === "Giảng viên") {
-        getElement("#soNgay").value = user.soNgay;
-        getElement("#luongTheoNgay").value = user.luongTheoNgay;
+        const employee = new Employee(
+          user.id,
+          user.name,
+          user.type,
+          user.diaChi,
+          user.email,
+          user.soNgay,
+          user.luongTheoNgay
+        );
+        getElement("#id").value = employee.id;
+        getElement("#name").value = employee.name;
+        getElement("#loai").value = employee.type;
+        getElement("#diaChi").value = employee.diaChi;
+        getElement("#email").value = employee.email;
+        getElement("#soNgay").value = employee.soNgay;
+        getElement("#luongTheoNgay").value = employee.luongTheoNgay;
       } else if (user.type === "Khách hàng") {
-        getElement("#tenCTy").value = user.tenCTy;
-        getElement("#triGiaHD").value = user.triGiaHD;
-        getElement("#danhGia").value = user.danhGia;
+        const customer = new Customer(
+          user.id,
+          user.name,
+          user.type,
+          user.diaChi,
+          user.email,
+          user.tenCTy,
+          user.triGiaHD,
+          user.danhGia
+        );
+        getElement("#id").value = customer.id;
+        getElement("#name").value = customer.name;
+        getElement("#loai").value = customer.type;
+        getElement("#diaChi").value = customer.diaChi;
+        getElement("#email").value = customer.email;
+        getElement("#tenCTy").value = customer.tenCTy;
+        getElement("#triGiaHD").value = customer.triGiaHD;
+        getElement("#danhGia").value = customer.danhGia;
       }
 
       showInput();
@@ -276,6 +318,94 @@ window.deleteUser = (id) => {
   promise
     .then(() => {
       getUserList();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+window.showDetail = (id) => {
+  getElement("#btnAdd").hidden = true;
+  getElement("#btnCapNhat").hidden = true;
+  getElement("#txtId").hidden = false;
+
+  const promise = axios({
+    method: "GET",
+    url: `${BASE_URL}/${id}`,
+  });
+
+  promise
+    .then((res) => {
+      console.log(res.data);
+      const user = res.data;
+      if (user.type === "Học viên") {
+        const student = new Student(
+          user.id,
+          user.name,
+          user.type,
+          user.diaChi,
+          user.email,
+          user.diemToan,
+          user.diemLy,
+          user.diemHoa
+        );
+
+        getElement("#id").value = student.id;
+        getElement("#name").value = student.name;
+        getElement("#loai").value = student.type;
+        getElement("#diaChi").value = student.diaChi;
+        getElement("#email").value = student.email;
+        getElement("#diemToan").value = student.diemToan;
+        getElement("#diemLy").value = student.diemLy;
+        getElement("#diemHoa").value = student.diemHoa;
+        getElement("#txtDiemTB").hidden = false;
+        getElement("#txtLuongThang").hidden = true;
+        getElement("#diemTB").value = student.tinhDiemTB();
+        showInput();
+      } else if (user.type === "Giảng viên") {
+        const employee = new Employee(
+          user.id,
+          user.name,
+          user.type,
+          user.diaChi,
+          user.email,
+          user.soNgay,
+          user.luongTheoNgay
+        );
+        getElement("#id").value = employee.id;
+        getElement("#name").value = employee.name;
+        getElement("#loai").value = employee.type;
+        getElement("#diaChi").value = employee.diaChi;
+        getElement("#email").value = employee.email;
+        getElement("#soNgay").value = employee.soNgay;
+        getElement("#luongTheoNgay").value = employee.luongTheoNgay;
+        getElement("#txtLuongThang").hidden = false;
+        getElement("#txtDiemTB").hidden = true;
+        getElement("#luongThang").value = employee.tinhLuong();
+        showInput();
+      } else if (user.type === "Khách hàng") {
+        const customer = new Customer(
+          user.id,
+          user.name,
+          user.type,
+          user.diaChi,
+          user.email,
+          user.tenCTy,
+          user.triGiaHD,
+          user.danhGia
+        );
+        getElement("#id").value = customer.id;
+        getElement("#name").value = customer.name;
+        getElement("#loai").value = customer.type;
+        getElement("#diaChi").value = customer.diaChi;
+        getElement("#email").value = customer.email;
+        getElement("#tenCTy").value = customer.tenCTy;
+        getElement("#triGiaHD").value = customer.triGiaHD;
+        getElement("#danhGia").value = customer.danhGia;
+        getElement("#txtLuongThang").hidden = true;
+        getElement("#txtDiemTB").hidden = true;
+        showInput();
+      }
     })
     .catch((err) => {
       console.log(err);
