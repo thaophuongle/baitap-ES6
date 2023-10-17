@@ -6,18 +6,6 @@ class Person {
     this.diaChi = diaChi;
     this.email = email;
   }
-
-  mapLoaiDoiTuong = () => {
-    if (this.type === "loai1") {
-      return "Học viên";
-    }
-    if (this.type === "loai2") {
-      return "Giảng viên";
-    }
-    if (this.type === "loai3") {
-      return "Khách hàng";
-    }
-  };
 }
 
 export default Person;

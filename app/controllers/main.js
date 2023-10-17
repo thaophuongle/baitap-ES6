@@ -42,7 +42,7 @@ const renderTable = (userList) => {
           <td>${user.email}</td>
           <td>
             <button class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" onclick="editUser(${user.id})" id="btnEdit">Edit</button>
-            <button class="btn btn-danger" onclick="deleteFood(${user.id})">Delete</button>
+            <button class="btn btn-danger" onclick="deleteUser(${user.id})">Delete</button>
             <button class="btn btn-info">Detail</button>
           </td>
       </tr>
@@ -51,9 +51,9 @@ const renderTable = (userList) => {
   getElement("#tbodyUser").innerHTML = htmlContent;
 };
 
-getElement("#loai").onchange = () => {
+const showInput = () => {
   const type = getElement("#loai").value;
-  if (type === "loai1") {
+  if (type === "Học viên") {
     getElement("#txtDiemToan").hidden = false;
     getElement("#txtDiemHoa").hidden = false;
     getElement("#txtDiemLy").hidden = false;
@@ -62,7 +62,7 @@ getElement("#loai").onchange = () => {
     getElement("#txtTenCTy").hidden = true;
     getElement("#txtGiaTriHD").hidden = true;
     getElement("#txtDanhGia").hidden = true;
-  } else if (type === "loai2") {
+  } else if (type === "Giảng viên") {
     getElement("#txtSoNgay").hidden = false;
     getElement("#txtLuongTheoNgay").hidden = false;
     getElement("#txtDiemToan").hidden = true;
@@ -71,7 +71,7 @@ getElement("#loai").onchange = () => {
     getElement("#txtTenCTy").hidden = true;
     getElement("#txtGiaTriHD").hidden = true;
     getElement("#txtDanhGia").hidden = true;
-  } else if (type === "loai3") {
+  } else if (type === "Khách hàng") {
     getElement("#txtTenCTy").hidden = false;
     getElement("#txtGiaTriHD").hidden = false;
     getElement("#txtDanhGia").hidden = false;
@@ -90,6 +90,10 @@ getElement("#loai").onchange = () => {
     getElement("#txtGiaTriHD").hidden = true;
     getElement("#txtDanhGia").hidden = true;
   }
+};
+
+getElement("#loai").onchange = () => {
+  showInput();
 };
 
 const layThongTinNguoiDung = () => {
@@ -124,7 +128,7 @@ const layThongTinNguoiDung = () => {
 
   const objectType = document.getElementById("loai");
 
-  if (objectType.value === "loai1")
+  if (objectType.value === "Học viên")
     return new Student(
       id,
       name,
@@ -135,9 +139,9 @@ const layThongTinNguoiDung = () => {
       diemLy,
       diemHoa
     );
-  else if (objectType.value === "loai2")
+  else if (objectType.value === "Giảng viên")
     return new Employee(id, name, type, diaChi, email, soNgay, luongTheoNgay);
-  else if (objectType.value === "loai3")
+  else if (objectType.value === "Khách hàng")
     return new Customer(
       id,
       name,
@@ -150,9 +154,26 @@ const layThongTinNguoiDung = () => {
     );
 };
 
+getElement("#btnThem").onclick = () => {
+  getElement("#btnCapNhat").hidden = true;
+  getElement("#btnAdd").hidden = false;
+};
+
+getElement("#btnClose").onclick = () => {
+  resetForm();
+};
+
+const resetForm = () => {
+  const elements = document.querySelectorAll(
+    "#userForm input, #userForm select, #userForm textarea"
+  );
+  elements.forEach((ele, index) => {
+    ele.value = "";
+  });
+};
+
 getElement("#btnAdd").onclick = () => {
   const user = layThongTinNguoiDung();
-  getElement("#btnCapNhat").hidden = true;
 
   const promise = axios({
     method: "POST",
@@ -160,7 +181,6 @@ getElement("#btnAdd").onclick = () => {
     data: {
       //spread operator
       ...user,
-      type: user.mapLoaiDoiTuong(),
     },
   });
 
@@ -169,6 +189,90 @@ getElement("#btnAdd").onclick = () => {
       console.log(res.data);
       getUserList();
       getElement("#btnClose").click();
+      resetForm();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+window.editUser = (id) => {
+  getElement("#btnAdd").hidden = true;
+  getElement("#btnCapNhat").hidden = false;
+  const promise = axios({
+    method: "GET",
+    url: `${BASE_URL}/${id}`,
+  });
+
+  promise
+    .then((res) => {
+      const parse = (user) => {
+        return {
+          ...user,
+        };
+      };
+
+      console.log(res.data);
+      const user = parse(res.data);
+      getElement("#id").value = user.id;
+      getElement("#name").value = user.name;
+      getElement("#loai").value = user.loai;
+      getElement("#diaChi").value = user.diaChi;
+      getElement("#email").value = user.email;
+      if (user.loai === "Học viên") {
+        getElement("#diemToan").value = user.diemToan;
+        getElement("#diemLy").value = user.diemLy;
+        getElement("#diemHoa").value = user.diemHoa;
+      } else if (user.loai === "Giảng viên") {
+        getElement("#soNgay").value = user.soNgay;
+        getElement("#luongTheoNgay").value = user.luongTheoNgay;
+      } else if (user.loai === "Khách hàng") {
+        getElement("#tenCTy").value = user.tenCTy;
+        getElement("#triGiaHD").value = user.triGiaHD;
+        getElement("#danhGia").value = user.danhGia;
+      }
+
+      showInput();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+getElement("#btnCapNhat").onclick = () => {
+  const user = layThongTinNguoiDung();
+
+  const id = getElement("#id").value;
+
+  //call API cập nhật món ăn
+  const promise = axios({
+    method: "PUT",
+    url: `${BASE_URL}/${id}`,
+    data: {
+      //spread operator
+      ...user,
+    },
+  });
+
+  promise
+    .then(() => {
+      getUserList();
+      getElement("#btnClose").click();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+window.deleteUser = (id) => {
+  const promise = axios({
+    method: "DELETE",
+    url: `${BASE_URL}/${id}`,
+  });
+
+  promise
+    .then(() => {
+      getUserList();
     })
     .catch((err) => {
       console.log(err);
