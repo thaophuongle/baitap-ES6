@@ -184,6 +184,104 @@ const resetForm = () => {
 //thêm người dùng vào API
 getElement("#btnAdd").onclick = () => {
   const user = layThongTinNguoiDung();
+  console.log(user.type);
+
+  let valid =
+    kiemTraRong(
+      user.name,
+      "#invalidTen",
+      "Tên người dùng không được để trống!"
+    ) && kiemTraChuoi(user.name, "#invalidTen", "Tên người dùng phải là chữ");
+
+  valid &= kiemTraLoaiNguoiDung(
+    user.type,
+    "#invalidLoai",
+    "Loại người dùng không được để trống"
+  );
+
+  valid &=
+    kiemTraRong(
+      user.diaChi,
+      "#invalidDiaChi",
+      "Dia chi không được để trống!"
+    ) && kiemTraChuoi(user.diaChi, "#invalidDiaChi", "Dia chi phải là chữ");
+
+  valid &=
+    kiemTraEmail(user.email, "#invalidEmail", "Email khong dung dinh dang") &&
+    kiemTraRong(user.email, "#invalidEmail", "Email khong duoc de trong");
+
+  if (user.type === "Học viên") {
+    valid &=
+      kiemTraRong(
+        user.diemToan,
+        "#invalidDiemToan",
+        "Diem toan khong duoc de trong"
+      ) && kiemTraSo(user.diemToan, "#invalidDiemToan", "Diem toan phai la so");
+
+    valid &=
+      kiemTraRong(
+        user.diemHoa,
+        "#invalidDiemHoa",
+        "Diem hoa khong duoc de trong"
+      ) && kiemTraSo(user.diemToan, "#invalidDiemHoa", "Diem hoa phai la so");
+
+    valid &=
+      kiemTraRong(
+        user.diemLy,
+        "#invalidDiemLy",
+        "Diem ly khong duoc de trong"
+      ) && kiemTraSo(user.diemLy, "#invalidDiemLy", "Diem ly phai la so");
+  } else if (user.type === "Giảng viên") {
+    valid &=
+      kiemTraRong(
+        user.soNgay,
+        "#invalidSoNgay",
+        "So ngay lam viec khong duoc de trong"
+      ) &&
+      kiemTraSo(user.soNgay, "#invalidSoNgay", "So ngay lam viec phai la so");
+
+    valid &=
+      kiemTraRong(
+        user.luongTheoNgay,
+        "#invalidLuongTheoNgay",
+        "Luong theo ngay khong duoc de trong"
+      ) &&
+      kiemTraSo(
+        user.luongTheoNgay,
+        "#invalidLuongTheoNgay",
+        "Luong theo ngay phai la so"
+      );
+  } else if (user.type === "Khách hàng") {
+    valid &=
+      kiemTraRong(
+        user.tenCTy,
+        "#invalidTenCTy",
+        "Ten cong ty không được để trống!"
+      ) &&
+      kiemTraChuoi(user.tenCTy, "#invalidTenCTy", "Ten cong ty phải là chữ");
+
+    valid &=
+      kiemTraRong(
+        user.triGiaHD,
+        "#invalidTriGiaHD",
+        "Tri gia hop dong khong duoc de trong"
+      ) &&
+      kiemTraSo(
+        user.triGiaHD,
+        "#invalidTriGiaHD",
+        "Tri gia hop dong phai la so"
+      );
+
+    valid &=
+      kiemTraRong(
+        user.danhGia,
+        "#invalidDanhGia",
+        "Danh gia không được để trống!"
+      ) &&
+      kiemTraChuoi(user.danhGia, "#invalidDanhGia", "Danh gia phải là chữ");
+  } else {
+    valid = false;
+  }
 
   const promise = axios({
     method: "POST",
@@ -196,10 +294,12 @@ getElement("#btnAdd").onclick = () => {
 
   promise
     .then((res) => {
-      console.log(res.data);
-      getUserList();
-      getElement("#btnClose").click();
-      resetForm();
+      if (valid) {
+        console.log(res.data);
+        getUserList();
+        getElement("#btnClose").click();
+        resetForm();
+      }
     })
     .catch((err) => {
       console.log(err);
